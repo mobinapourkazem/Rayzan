@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>رایزن — شورای مشورتِ تو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0F14;
+    --bg-2:#13141C;
+    --surface:#181A23;
+    --surface-2:#1E202B;
+    --text:#F3F2EE;
+    --muted:#9A9CA8;
+    --muted-2:#6E7180;
+    --line:rgba(255,255,255,.09);
+    --line-2:rgba(255,255,255,.06);
+    --gold:#E6B24A;
+    --gold-soft:#F0C871;
+    /* advisor accents */
+    --c-optimist:#F4B942;
+    --c-skeptic:#43C9D6;
+    --c-strategist:#9B8CFF;
+    --c-heart:#FF7E9D;
+    --maxw:1080px;
+    --font:"Vazirmatn", system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font);background:var(--bg);color:var(--text);
+    line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    background-image:
+      radial-gradient(900px 480px at 50% -8%, rgba(230,178,74,.16), transparent 62%),
+      radial-gradient(700px 500px at 90% 8%, rgba(155,140,255,.08), transparent 60%),
+      radial-gradient(700px 500px at 6% 22%, rgba(67,201,214,.06), transparent 60%);
+    background-attachment:fixed;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  [v-cloak]{display:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  ::selection{background:rgba(230,178,74,.3)}
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+
+  /* ---------- Top bar ---------- */
+  .top{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand__mark{
+    width:34px;height:34px;border-radius:11px;position:relative;flex:none;
+    background:radial-gradient(circle at 30% 30%, #F4D58A, var(--gold) 55%, #B07E20);
+    box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 6px 18px rgba(230,178,74,.35);
+    display:grid;place-items:center;
+  }
+  .brand__mark::before{content:"";width:13px;height:13px;border:2.5px solid #2A1C04;border-radius:50%;border-inline-end-color:transparent;transform:rotate(-30deg)}
+  .brand__name{font-weight:800;font-size:21px;letter-spacing:0}
+  .brand__name b{color:var(--gold)}
+  .top__tag{color:var(--muted);font-size:14px}
+  @media(max-width:620px){.top__tag{display:none}}
+
+  /* ---------- Hero / ask ---------- */
+  .hero{padding:46px 0 14px;text-align:center}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13.5px;color:var(--gold-soft);background:rgba(230,178,74,.10);
+    border:1px solid rgba(230,178,74,.25);border-radius:999px;padding:6px 14px;margin-bottom:22px;
+  }
+  .kicker .d{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+  .hero h1{
+    font-weight:800;font-size:clamp(32px,5.6vw,54px);line-height:1.25;margin:0 auto 16px;max-width:760px;
+  }
+  .hero h1 .g{color:var(--gold)}
+  .hero p.lead{color:var(--muted);font-size:clamp(16px,2.2vw,19px);max-width:560px;margin:0 auto;line-height:1.85}
+
+  .asker{max-width:680px;margin:34px auto 0}
+  .ask{
+    position:relative;background:var(--surface);border:1px solid var(--line);
+    border-radius:18px;padding:6px;transition:border-color .2s, box-shadow .2s;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+  }
+  .ask:focus-within{border-color:rgba(230,178,74,.55);box-shadow:0 0 0 4px rgba(230,178,74,.12), 0 20px 60px rgba(0,0,0,.45)}
+  .ask textarea{
+    width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text);
+    font-family:var(--font);font-size:16.5px;line-height:1.8;padding:16px 16px 4px;min-height:66px;max-height:200px;
+  }
+  .ask textarea::placeholder{color:var(--muted-2)}
+  .ask__foot{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 8px;gap:10px}
+  .ask__hint{font-size:12px;color:var(--muted-2)}
+  .summon{
+    display:inline-flex;align-items:center;gap:9px;
+    background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#241803;
+    font-weight:700;font-size:15px;border-radius:12px;padding:11px 20px;
+    transition:transform .12s ease, box-shadow .2s ease, opacity .2s;
+    box-shadow:0 8px 22px rgba(230,178,74,.32);
+  }
+  .summon:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 28px rgba(230,178,74,.42)}
+  .summon:active:not(:disabled){transform:scale(.98)}
+  .summon:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  .summon svg{transform:scaleX(-1)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:18px}
+  .chip{
+    font-size:13px;color:var(--muted);background:rgba(255,255,255,.04);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;transition:all .15s;
+  }
+  .chip:hover:not(:disabled){color:var(--text);border-color:var(--gold);background:rgba(230,178,74,.08)}
+  .chip:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ---------- Loading ---------- */
+  .convening{display:flex;flex-direction:column;align-items:center;gap:16px;padding:60px 0 30px;text-align:center}
+  .orbs{display:flex;gap:12px}
+  .orbs i{width:13px;height:13px;border-radius:50%;animation:rise 1.3s infinite ease-in-out}
+  .orbs i:nth-child(1){background:var(--c-optimist);animation-delay:0s}
+  .orbs i:nth-child(2){background:var(--c-skeptic);animation-delay:.16s}
+  .orbs i:nth-child(3){background:var(--c-strategist);animation-delay:.32s}
+  .orbs i:nth-child(4){background:var(--c-heart);animation-delay:.48s}
+  @keyframes rise{0%,70%,100%{transform:translateY(0);opacity:.45}35%{transform:translateY(-12px);opacity:1}}
+  .convening p{color:var(--muted);font-size:15px}
+
+  .err{max-width:680px;margin:30px auto 0;color:#FCA5A5;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);border-radius:14px;padding:16px 18px;font-size:14.5px;text-align:center}
+
+  /* ---------- Council ---------- */
+  .council{padding:42px 0 10px}
+  .council__head{text-align:center;margin-bottom:26px}
+  .council__head .q{color:var(--muted);font-size:14px;margin-bottom:6px}
+  .council__head h2{font-weight:700;font-size:22px}
+  .council__head h2 .g{color:var(--gold)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+
+  .advisor{
+    position:relative;background:var(--surface);border:1px solid var(--line);
+    border-radius:18px;padding:22px 22px 22px;overflow:hidden;
+    animation:cardIn .55s cubic-bezier(.22,.61,.36,1) both;
+  }
+  .advisor::before{content:"";position:absolute;top:0;inset-inline-start:0;width:100%;height:3px;background:var(--ac);opacity:.9}
+  .advisor::after{content:"";position:absolute;top:-40%;inset-inline-end:-10%;width:220px;height:220px;border-radius:50%;background:var(--ac);opacity:.07;filter:blur(20px);pointer-events:none}
+  @keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .advisor__top{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+  .advisor__av{
+    width:46px;height:46px;border-radius:13px;flex:none;display:grid;place-items:center;color:#10121a;
+    background:linear-gradient(150deg, color-mix(in srgb, var(--ac) 88%, white), var(--ac));
+    box-shadow:0 6px 18px color-mix(in srgb, var(--ac) 40%, transparent);
+  }
+  .advisor__meta h3{font-weight:700;font-size:17.5px;color:var(--ac)}
+  .advisor__meta span{font-size:12.5px;color:var(--muted)}
+  .stance{
+    display:inline-block;font-size:13px;font-weight:600;color:var(--text);
+    background:color-mix(in srgb, var(--ac) 14%, transparent);
+    border:1px solid color-mix(in srgb, var(--ac) 35%, transparent);
+    border-radius:9px;padding:6px 11px;margin-bottom:11px;line-height:1.6;
+  }
+  .advisor__arg{color:#D7D8DE;font-size:14.8px;line-height:1.9}
+
+  /* ---------- Synthesis ---------- */
+  .verdict{
+    margin-top:18px;position:relative;border-radius:20px;padding:26px 24px;
+    background:linear-gradient(180deg, rgba(230,178,74,.10), rgba(230,178,74,.03));
+    border:1px solid rgba(230,178,74,.34);
+    animation:cardIn .55s cubic-bezier(.22,.61,.36,1) .25s both;
+  }
+  .verdict__label{display:flex;align-items:center;gap:9px;color:var(--gold);font-weight:700;font-size:15px;margin-bottom:16px}
+  .verdict__label .seal{width:26px;height:26px;border-radius:8px;background:radial-gradient(circle at 30% 30%,#F4D58A,var(--gold));display:grid;place-items:center;color:#241803;box-shadow:0 4px 12px rgba(230,178,74,.4)}
+  .vrow{display:flex;gap:13px;padding:12px 0;border-top:1px dashed var(--line)}
+  .vrow:first-of-type{border-top:none;padding-top:0}
+  .vrow__k{flex:none;width:96px;color:var(--muted);font-size:13.5px;padding-top:1px}
+  .vrow__v{font-size:15.2px;line-height:1.85;color:var(--text)}
+  .vrow--step .vrow__v{font-weight:600}
+
+  .again{display:flex;justify-content:center;margin-top:26px}
+  .again button{
+    display:inline-flex;align-items:center;gap:8px;color:var(--muted);
+    border:1px solid var(--line);border-radius:11px;padding:10px 18px;font-size:14px;transition:all .15s;
+  }
+  .again button:hover{color:var(--text);border-color:var(--gold)}
+
+  /* ---------- Footer ---------- */
+  footer{margin-top:64px;border-top:1px solid var(--line-2);padding:26px 0 40px}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted-2);font-size:13px}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="wrap">
+
+    <!-- TOP -->
+    <header class="top">
+      <div class="brand">
+        <span class="brand__mark"></span>
+        <span class="brand__name">رای<b>زن</b></span>
+      </div>
+      <span class="top__tag">شورای مشورتِ تو، هر وقت که لازم شد</span>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="kicker"><span class="d"></span>چهار ذهن، یک تصمیم</span>
+      <h1>وقتی نمی‌دانی کدام راه درست است، با یک <span class="g">شورای کامل</span> مشورت کن.</h1>
+      <p class="lead">دوراهی‌ات را بنویس. چهار مشاور با چهار زاویه‌ی دیدِ متفاوت نظر می‌دهند، و رایزن برایت جمع‌بندی می‌کند.</p>
+
+      <!-- ASK -->
+      <div class="asker" v-if="!result && !loading">
+        <div class="ask">
+          <textarea
+            ref="input" v-model="prompt" rows="1"
+            @keydown="onKey"
+            placeholder="دوراهی یا تصمیمت را اینجا بنویس… مثلاً: «پیشنهاد کاری بهتری گرفته‌ام ولی از تیم فعلی‌ام راضی‌ام. بمانم یا بروم؟»"
+            aria-label="دوراهی‌ات را بنویس"></textarea>
+          <div class="ask__foot">
+            <span class="ask__hint">اینتر برای ارسال · Shift+Enter خط جدید</span>
+            <button class="summon" :disabled="!canRun" @click="ask">
+              از شورا بپرس
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="chips">
+          <button class="chip" v-for="(c,i) in examples" :key="i" @click="useExample(c)">{{ c }}</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="convening" v-if="loading">
+      <div class="orbs"><i></i><i></i><i></i><i></i></div>
+      <p>شورا در حال مشورت است…</p>
+    </section>
+
+    <!-- ERROR -->
+    <div class="err" v-if="error">{{ error }}</div>
+
+    <!-- COUNCIL RESULT -->
+    <section class="council" v-if="result && !loading">
+      <div class="council__head">
+        <div class="q">دوراهیِ تو</div>
+        <h2>«{{ asked }}»</h2>
+      </div>
+
+      <div class="grid">
+        <article class="advisor" v-for="(a,i) in council" :key="a.key"
+                 :style="{'--ac':a.color, animationDelay:(i*0.1)+'s'}">
+          <div class="advisor__top">
+            <div class="advisor__av" v-html="a.icon"></div>
+            <div class="advisor__meta">
+              <h3>{{ a.name }}</h3>
+              <span>{{ a.role }}</span>
+            </div>
+          </div>
+          <div class="stance" v-if="a.stance">{{ a.stance }}</div>
+          <p class="advisor__arg">{{ a.argument }}</p>
+        </article>
+      </div>
+
+      <!-- VERDICT -->
+      <div class="verdict" v-if="result.synthesis">
+        <div class="verdict__label">
+          <span class="seal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          جمع‌بندی رایزن
+        </div>
+        <div class="vrow">
+          <div class="vrow__k">پیشنهاد</div>
+          <div class="vrow__v">{{ result.synthesis.recommendation }}</div>
+        </div>
+        <div class="vrow">
+          <div class="vrow__k">سبک‌سنگین</div>
+          <div class="vrow__v">{{ result.synthesis.tradeoff }}</div>
+        </div>
+        <div class="vrow vrow--step">
+          <div class="vrow__k">اولین قدم</div>
+          <div class="vrow__v">{{ result.synthesis.first_step }}</div>
+        </div>
+      </div>
+
+      <div class="again">
+        <button @click="reset">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 4v6h6M20 20v-6h-6M19 9a7 7 0 00-12-3M5 15a7 7 0 0012 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          یک دوراهیِ دیگر بپرس
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="foot">
+        <span>رایزن — یک شورای هوش مصنوعی برای تصمیم‌های سخت</span>
+        <span>ساخته‌شده با Vue</span>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<!-- هسته‌ی هوش مصنوعی بدون کلید و بدون بک‌اند -->
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.38/vue.global.prod.js"></script>
+<script>
+const { createApp } = Vue;
+
+/* هویت ثابت چهار مشاور (نام، نقش، رنگ، آیکن سمت کلاینت می‌نشیند) */
+const ADVISORS = [
+  { key:"optimist",   name:"خوش‌بین",   role:"فرصت‌ها و بهترین حالت", color:"#F4B942",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l-1.5-1.5M19.5 19.5L18 18M18 6l1.5-1.5M4.5 19.5L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/></svg>' },
+  { key:"skeptic",    name:"واقع‌گرا",  role:"ریسک‌ها و نقاط ضعف",   color:"#43C9D6",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 8v4M12 15.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' },
+  { key:"strategist", name:"استراتژیست", role:"تصویر بلندمدت و حرکت بعدی", color:"#9B8CFF",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 9.5V20h14V9.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 20v-5h6v5" stroke="currentColor" stroke-width="2"/></svg>' },
+  { key:"heart",      name:"وجدان",     role:"ارزش‌ها و دلِ واقعی تو", color:"#FF7E9D",
+    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-7-9.3A4 4 0 0112 8a4 4 0 017 2.7C19 15.6 12 20 12 20z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>' }
+];
+
+createApp({
+  data(){
+    return {
+      prompt:"",
+      asked:"",
+      loading:false,
+      error:"",
+      result:null,
+      examples:[
+        "استارتاپم را شروع کنم یا اول یک شغل امن پیدا کنم؟",
+        "برای ادامه‌تحصیل به خارج بروم یا همین‌جا کار کنم؟",
+        "این رابطه‌ی از راه دور را ادامه بدهم؟",
+        "پس‌اندازم را سرمایه‌گذاری کنم یا نگه دارم؟"
+      ]
+    }
+  },
+  computed:{
+    canRun(){ return this.prompt.trim().length>2 && !this.loading },
+    council(){
+      if(!this.result || !this.result.advisors) return [];
+      const byKey = {};
+      this.result.advisors.forEach(a=>{ byKey[a.key]=a; });
+      return ADVISORS.map(meta=>({
+        ...meta,
+        stance: byKey[meta.key] ? byKey[meta.key].stance : "",
+        argument: byKey[meta.key] ? byKey[meta.key].argument : "—"
+      }));
+    }
+  },
+  mounted(){ this.autosize(); },
+  methods:{
+    onKey(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); this.ask(); }
+      this.$nextTick(this.autosize);
+    },
+    autosize(){
+      const t=this.$refs.input; if(!t) return;
+      t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,200)+'px';
+    },
+    useExample(c){ this.prompt=c; this.$nextTick(()=>{ this.autosize(); this.ask(); }); },
+    reset(){
+      this.result=null; this.error=""; this.prompt="";
+      this.$nextTick(()=>{ this.autosize(); if(this.$refs.input) this.$refs.input.focus(); });
+    },
+
+    /* ────────────────────────────────────────────────────────────
+       قلب اتصال به هوش مصنوعی — بدون کلید API و بدون بک‌اند.
+       از Puter.js استفاده می‌کند (مدلِ «کاربر-می‌پردازد»):
+       تو هیچ کلیدی لازم نداری؛ کاربر بار اول یک‌بار وارد حساب
+       رایگان Puter می‌شود و تمام. مدل را با تغییر "model" عوض کن
+       (مثلاً "claude-sonnet-4-6"، "openai/gpt-5.4-nano"، ...).
+       اگر خواستی به کلید/بک‌اند خودت وصل شوی، فقط همین تابع را عوض کن.
+       ──────────────────────────────────────────────────────────── */
+    async callModel(system, userText){
+      if(typeof puter === "undefined" || !puter.ai){
+        throw new Error("puter-not-loaded");
+      }
+      const resp = await puter.ai.chat(
+        system + "\n\n———\n\nدوراهیِ کاربر:\n" + userText,
+        { model: "claude-sonnet-4-6" }
+      );
+      // استخراج متنِ پاسخ به‌صورت مقاوم در برابر شکل‌های مختلف خروجی
+      if(typeof resp === "string") return resp.trim();
+      if(resp && resp.message && resp.message.content){
+        const c = resp.message.content;
+        if(Array.isArray(c)) return c.map(b=>b.text||"").join("\n").trim();
+        if(typeof c === "string") return c.trim();
+      }
+      if(resp && typeof resp.text === "string") return resp.text.trim();
+      return String(resp ?? "").trim();
+    },
+
+    async ask(){
+      if(!this.canRun) return;
+      const q = this.prompt.trim();
+      this.asked=q; this.loading=true; this.error=""; this.result=null;
+
+      const system = [
+        "تو «رایزن» هستی؛ یک شورای مشورتی متشکل از چهار مشاور با شخصیت‌های متفاوت.",
+        "کاربر یک دوراهی یا تصمیم می‌نویسد. تو دیدگاه هر چهار مشاور و سپس یک جمع‌بندی می‌دهی.",
+        "مشاوران دقیقاً با همین کلیدها:",
+        "- optimist (خوش‌بین): بهترین حالت ممکن و فرصت‌هایی که این مسیر باز می‌کند.",
+        "- skeptic (واقع‌گرا): ریسک‌ها، هزینه‌های پنهان و نقاط ضعف تصمیم.",
+        "- strategist (استراتژیست): تصویر بلندمدت و هوشمندانه‌ترین حرکت بعدی.",
+        "- heart (وجدان): چیزی که با ارزش‌ها و احساس واقعی کاربر هم‌خوان است.",
+        "برای هر مشاور یک stance (یک جمله‌ی کوتاه و قاطع که موضعش را نشان می‌دهد) و یک argument (۲ تا ۳ جمله با لحن خاص همان مشاور) بنویس.",
+        "سپس synthesis با سه بخش: recommendation (پیشنهاد نهایی و متعادل)، tradeoff (مهم‌ترین چیزی که کاربر با این انتخاب می‌پذیرد یا از دست می‌دهد)، first_step (یک قدم عملی و مشخص برای همین هفته).",
+        "همه‌چیز به فارسی روان و گرم. اگر ورودی کاربر یک دوراهی واقعی نبود، مودبانه در همان قالب از او بخواه تصمیمش را شفاف‌تر بنویسد.",
+        "فقط و فقط یک شیء JSON معتبر برگردان، بدون هیچ متن اضافه و بدون بک‌تیک. ساختار دقیقاً:",
+        '{"advisors":[{"key":"optimist","stance":"...","argument":"..."},{"key":"skeptic","stance":"...","argument":"..."},{"key":"strategist","stance":"...","argument":"..."},{"key":"heart","stance":"...","argument":"..."}],"synthesis":{"recommendation":"...","tradeoff":"...","first_step":"..."}}'
+      ].join("\n");
+
+      try{
+        let text = await this.callModel(system, q);
+        text = text.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();
+        const start = text.indexOf("{"), end = text.lastIndexOf("}");
+        if(start>-1 && end>-1) text = text.slice(start, end+1);
+        const parsed = JSON.parse(text);
+        if(!parsed.advisors) throw new Error("bad shape");
+        this.result = parsed;
+      }catch(err){
+        if(String(err && err.message).includes("puter-not-loaded")){
+          this.error = "هسته‌ی هوش مصنوعی بارگذاری نشد. این نسخه برای اجرا روی هاستِ خودت ساخته شده؛ فایل را روی یک هاست یا سرورِ محلی باز کن (نه با دابل‌کلیک).";
+        } else {
+          this.error = "شورا الان نتوانست جمع شود. یک لحظه بعد دوباره امتحان کن.";
+        }
+      }finally{
+        this.loading=false;
+      }
+    }
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
