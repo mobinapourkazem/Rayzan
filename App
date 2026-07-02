@@ -1,0 +1,19 @@
+<template>
+  <div id="app" class="rayzen" dir="rtl">
+    <!-- ساختار اصلی برنامه در فصل بعد تکمیل میشود -->
+  </div>
+</template>
+ 
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      userQuestion: "",
+      advisors: [],
+      isLoading: false,
+      errorMessage: ""
+    };
+  }
+};
+</script>
